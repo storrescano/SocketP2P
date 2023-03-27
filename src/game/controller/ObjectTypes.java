@@ -1,5 +1,5 @@
 package game.controller;
 
-public enum Type {
+public enum ObjectTypes {
     PELOTA, DISPARO, NAVE
 }

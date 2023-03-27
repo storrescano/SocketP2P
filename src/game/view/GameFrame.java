@@ -2,15 +2,18 @@ package game.view;
 
 import communications.controller.ClientP2P;
 import game.controller.Controller;
+import game.model.VisualObject;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class GameFrame extends JFrame implements ClientP2P {
+public class GameFrame extends JFrame implements ClientP2P, Runnable {
 
 	private static final long serialVersionUID = 8456560429229699542L;
 
 	private Controller controller;
+	public int refreshMilis;
 
 	private PelotasGame pelotasGame;
 
@@ -42,6 +45,10 @@ public class GameFrame extends JFrame implements ClientP2P {
 		this.controller = controller;
 	}
 
+	public void refresh(ArrayList<VisualObject> animatedObjectsList) {
+		pelotasGame.paintObjects(animatedObjectsList);
+	}
+
 
 
 	@Override
@@ -62,5 +69,18 @@ public class GameFrame extends JFrame implements ClientP2P {
 	@SuppressWarnings("unused")
 	private void logError(String message) {
 		System.err.println(this.getClass().getSimpleName() + ": " + message);
+	}
+
+	@Override
+	public void run() {
+		while(true) {
+			ArrayList<VisualObject> list = new ArrayList<>();
+			refresh(list);
+			try {
+				Thread.sleep(refreshMilis);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

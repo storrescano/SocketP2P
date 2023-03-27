@@ -2,10 +2,12 @@ package game.view;
 
 //import game.model.VisualObject;
 
+import game.model.VisualObject;
+
 import java.awt.*;
 import java.util.ArrayList;
 
-public class PelotasGame extends Canvas implements Runnable {
+public class PelotasGame extends Canvas {
 
 
     //private ArrayList<VisualObject> animatedObjectList;
@@ -20,12 +22,12 @@ public class PelotasGame extends Canvas implements Runnable {
 
     }
 
-    @Override
-    public void run() {
+
+    public void refresh(){
 
     }
 
-    public void refresh(){
+    public void paintObjects(ArrayList<VisualObject> animatedObjectsList) {
 
     }
 

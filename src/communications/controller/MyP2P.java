@@ -16,9 +16,9 @@ public class MyP2P {
 		try {
 			// Afegir ip de peers a la llista
 			properties.load(new FileInputStream(new File("connections.properties")));
-			int serverPort = Integer.valueOf(properties.getProperty("server_port"));
-			int timeToLive = Integer.valueOf(properties.getProperty("ttl"));
-			int timeout = Integer.valueOf(properties.getProperty("timeout"));
+			int serverPort = Integer.parseInt(properties.getProperty("server_port"));
+			int timeToLive = Integer.parseInt(properties.getProperty("ttl"));
+			int timeout = Integer.parseInt(properties.getProperty("timeout"));
 			connectionController = new ConnectionController(this, timeToLive, timeout, serverPort);
 			for(String peer: new String[]{
 					"ip_ul", "ip_uc", "ip_ur", "ip_ml",

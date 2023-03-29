@@ -1,28 +1,33 @@
 package game.view;
 
 import communications.controller.ClientP2P;
-import game.controller.Controller;
+import game.controller.AnimatedObjectStatus;
+import game.controller.AnimationController;
+import game.controller.ControllerP2P;
+import game.model.AnimatedObject;
 import game.model.VisualObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GameFrame extends JFrame implements ClientP2P, Runnable {
+public class GameView extends JFrame implements ClientP2P, Runnable {
 
 	private static final long serialVersionUID = 8456560429229699542L;
 
-	private Controller controller;
+	private AnimationController controller;
 	public int refreshMilis;
 
 	private PelotasGame pelotasGame;
 
 	private boolean runState;
 
-	public GameFrame(){
+	public GameView(){
 		setTitle("Pelotas rebotando");
 		setLayout(new BorderLayout());
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setUndecorated(true);
 
 		new Thread(() -> {
 			try {
@@ -31,17 +36,16 @@ public class GameFrame extends JFrame implements ClientP2P, Runnable {
 				throw new RuntimeException(e);
 			}
 			log("Altura: " + getHeight() + ", Ancho: " + getWidth());
+
 		}).start();
-		setUndecorated(true);
-
-
 		pelotasGame = new PelotasGame();
+
 		runState = true;
 		pack();
 		setVisible(true);
 	}
 
-	public void setController(Controller controller){
+	public void setController(AnimationController controller){
 		this.controller = controller;
 	}
 
@@ -75,6 +79,10 @@ public class GameFrame extends JFrame implements ClientP2P, Runnable {
 	public void run() {
 		while(true) {
 			ArrayList<VisualObject> list = new ArrayList<>();
+			for(AnimatedObject o: controller.getObjects()) {
+				if(o.getStatus() != AnimatedObjectStatus.dead)
+					list.add(o);
+			}
 			refresh(list);
 			try {
 				Thread.sleep(refreshMilis);
@@ -82,5 +90,9 @@ public class GameFrame extends JFrame implements ClientP2P, Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void setRefreshMilis(int refreshMilis) {
+		this.refreshMilis = refreshMilis;
 	}
 }

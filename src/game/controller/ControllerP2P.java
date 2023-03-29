@@ -1,45 +1,57 @@
 package game.controller;
 
-import communications.connections.ConnectionController;
 import communications.controller.ClientP2P;
 import communications.controller.IpUtilities;
 import communications.controller.MyP2P;
-import game.view.GameFrame;
+import game.model.AnimationModel;
+import game.view.GameView;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Controller implements ClientP2P {
+public class ControllerP2P implements ClientP2P {
 
     private static final String CONNECTED = "CONNECTED";
     private static final String DISCONNECTED = "DISCONNECTED";
 
+    private GameView gameView;
+
     private MyP2P myP2Pcontroller;
 
 
-    public Controller(){
-        Properties game = new Properties();
+    public ControllerP2P(){
+        Properties gameProperties = new Properties();
         try {
             // Afegir ip de peers a la llista
-            game.load(new FileInputStream("game.properties"));
-            boolean isPelota = Boolean.parseBoolean(game.getProperty("pelota"));
+            gameProperties.load(new FileInputStream("game.properties"));
 
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
 
-        GameFrame gameFrame = new GameFrame();
-        gameFrame.setController(this);
+        AnimationModel model = new AnimationModel();
+        AnimationController inicio = new AnimationController(model);
 
-        new Thread(gameFrame).start();
+        GameView game = new GameView();
+        game.setController(inicio);
+        game.setRefreshMilis(20);
+
+        new Thread(model).start();
+        new Thread(game).start();
+
     }
 
-    public void setController(MyP2P controller){
+    public ControllerP2P getController(){
+        return this;
+    }
+
+    public void setControllerP2P(MyP2P myP2Pcontroller){
+        this.myP2Pcontroller = myP2Pcontroller;
 
     }
+
 
     @Override
     public void addConnection(String ip) {

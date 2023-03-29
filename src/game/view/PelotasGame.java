@@ -4,35 +4,36 @@ package game.view;
 
 import game.model.VisualObject;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class PelotasGame extends Canvas {
 
 
-    //private ArrayList<VisualObject> animatedObjectList;
+    private ArrayList<VisualObject> animatedObjectList;
     private Image canvas;
     private Graphics canvasGraphics;
+    private Image background;
 
     public PelotasGame() {
-        setBackground(Color.black);
-    }
-
-    public void initializeComponents(){
-
-    }
-
-
-    public void refresh(){
-
-    }
-
-    public void paintObjects(ArrayList<VisualObject> animatedObjectsList) {
+        try {
+            background = ImageIO.read(new File("Imagenes/Fondo.jpeg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        animatedObjectList = new ArrayList<>();
+        canvas = new BufferedImage(1024, 800, BufferedImage.TYPE_3BYTE_BGR);
+        canvasGraphics = canvas.getGraphics();
 
     }
 
 
-    /*public void paintObjects(ArrayList<VisualObject> animatedObjectList) {
+
+    public void paintObjects(ArrayList<VisualObject> animatedObjectList) {
         this.animatedObjectList = animatedObjectList;
         repaint();
     }
@@ -51,5 +52,5 @@ public class PelotasGame extends Canvas {
             object.drawObject(canvasGraphics);
         }
         g.drawImage(canvas, 0, 0, null);
-    }*/
+    }
 }

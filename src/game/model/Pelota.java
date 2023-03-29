@@ -4,19 +4,21 @@ import game.controller.ObjectTypes;
 
 import java.util.Random;
 
-public class Pelota extends AnimatedObject {
+public class Pelota extends AnimatedObject{
 	private int velocidadX;
 	private int velocidadY;
 
-	private final int FRAME_LAPSE = 40;
-	
+	private final Boolean destroyOnContact = false;
 	private Coordinates positionActual;
 	private Coordinates positionUpdated;
+
+	private Coordinates posicionAbsoluta;
+
 	
 	private Random Random;
 	
-	public Pelota(ObjectTypes type, Coordinates position) {
-		super(type, position);
+	public Pelota(AnimationModel animationModel, ObjectTypes type, Coordinates position) {
+		super(animationModel, type, position);
 		positionUpdated = new Coordinates();
 		positionActual = new Coordinates();
 		
@@ -44,13 +46,21 @@ public class Pelota extends AnimatedObject {
 		setPosition(positionUpdated);
 	}
 
-	@Override
-	public void run() {
-		update();
-		try {
-			Thread.sleep(FRAME_LAPSE);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public Coordinates getPositionActual() {
+		return positionActual;
 	}
+
+	public Coordinates getPositionUpdated() {
+		return positionUpdated;
+	}
+
+
+	public Coordinates getPosicionAbsoluta() {
+		return posicionAbsoluta;
+	}
+
+	public void setPosicionAbsoluta(Coordinates posicionAbsoluta) {
+		this.posicionAbsoluta = posicionAbsoluta;
+	}
+
 }

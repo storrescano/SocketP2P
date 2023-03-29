@@ -1,14 +1,14 @@
 package main;
 
 import communications.controller.MyP2P;
-import game.controller.Controller;
+import game.controller.ControllerP2P;
 
 public class Main {
 
 	public static void main(String[] args) {
 		MyP2P controller = new MyP2P();
-		Controller juego = new Controller();
-		juego.setController(controller);
+		ControllerP2P juego = new ControllerP2P();
+		juego.setControllerP2P(controller);
 		controller.setClient(juego);
 	}
 }

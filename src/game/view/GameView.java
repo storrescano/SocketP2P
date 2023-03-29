@@ -38,11 +38,13 @@ public class GameView extends JFrame implements ClientP2P, Runnable {
 			log("Altura: " + getHeight() + ", Ancho: " + getWidth());
 
 		}).start();
-		pelotasGame = new PelotasGame();
 
+
+		pelotasGame = new PelotasGame();
 		runState = true;
 		pack();
 		setVisible(true);
+
 	}
 
 	public void setController(AnimationController controller){

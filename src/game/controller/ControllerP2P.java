@@ -20,7 +20,8 @@ public class ControllerP2P implements ClientP2P {
     private MyP2P myP2Pcontroller;
 
 
-    public ControllerP2P(){
+    public ControllerP2P(MyP2P myP2Pcontroller) {
+        this.myP2Pcontroller = myP2Pcontroller;
         Properties gameProperties = new Properties();
         try {
             // Afegir ip de peers a la llista
@@ -38,20 +39,12 @@ public class ControllerP2P implements ClientP2P {
         game.setController(inicio);
         game.setRefreshMilis(20);
 
+
         new Thread(model).start();
         new Thread(game).start();
 
-    }
-
-    public ControllerP2P getController(){
-        return this;
-    }
-
-    public void setControllerP2P(MyP2P myP2Pcontroller){
-        this.myP2Pcontroller = myP2Pcontroller;
 
     }
-
 
     @Override
     public void addConnection(String ip) {

@@ -10,30 +10,18 @@ public class PelotaView extends JPanel {
 
     private PelotaModel pelotaModel;
 
-    private boolean isPelota;
-
-    private ControllerP2P controllerP2P;
 
 
-
-    public PelotaView(PelotaModel pelotaModel, ControllerP2P controllerP2P) {
-        this.controllerP2P = controllerP2P;
+    public PelotaView(PelotaModel pelotaModel) {
         this.pelotaModel = pelotaModel;
 
 
     }
 
-    public void setPelotaModel(PelotaModel pelotaModel) {
-        this.pelotaModel = pelotaModel;
-    }
-
-    public void setIsPelota(boolean isPelota) {
-        this.isPelota = isPelota;
-    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Draw the ball at the current position
+        // Dibuja la pelota en la posicion actual
         g.fillOval(pelotaModel.getPositionActual().x, pelotaModel.getPositionActual().y, 20, 20);
     }
 

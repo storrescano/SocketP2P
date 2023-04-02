@@ -1,7 +1,6 @@
 package game.controller;
 
 import communications.controller.ClientP2P;
-import communications.controller.IpUtilities;
 import communications.controller.MyP2P;
 import game.model.PelotaModel;
 import game.view.PelotaView;
@@ -9,9 +8,10 @@ import game.view.PelotaView;
 import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
-public class ControllerP2P implements ClientP2P {
+public class ControllerP2P implements ClientP2P, Runnable {
 
     private static final String CONNECTED = "CONNECTED";
     private static final String DISCONNECTED = "DISCONNECTED";
@@ -22,6 +22,9 @@ public class ControllerP2P implements ClientP2P {
 
     private JFrame frame;
 
+    private PelotaModel pelotaModel;
+
+    private PelotaView pelotaView;
 
     private MyP2P myP2Pcontroller;
 
@@ -41,53 +44,89 @@ public class ControllerP2P implements ClientP2P {
             System.exit(-1);
         }
 
-        PelotaModel pelotaModel = new PelotaModel(this);
-        PelotaView pelotaView = new PelotaView(pelotaModel, this);
-        ControladorPelota controladorPelota = new ControladorPelota(pelotaModel,pelotaView, this);
+        pelotaModel = new PelotaModel(this);
+        pelotaView = new PelotaView(pelotaModel);
+
 
         frame = new JFrame("Pelota rebotando");
         frame.add(pelotaView);
-        frame.setUndecorated(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 200);
         frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-
+        frame.setUndecorated(true);
         frame.pack();
         frame.setVisible(true);
 
-        new Thread(controladorPelota).start();
-
 
     }
 
-    private void setPelota(boolean isPelota) {
+    public void setPelota(boolean isPelota) {
         this.isPelota = isPelota;
     }
 
-    @Override
-    public void addConnection(String ip) {
-        if (ip != null && IpUtilities.isValidIp(ip)) {
-            //System.out.println(myP2Pcontroller.getConnectionStatus(ip));
-        }
+    private boolean getPelota(){
+        return isPelota;
     }
 
-    public JFrame getFrame(){
+
+    public JFrame getFrame() {
         return frame;
     }
 
-    @Override
-    public void pushMessage(String ip, String message) {
-    }
 
     public boolean isPelotaIn() {
         return isPelota;
     }
 
-    public void setWalls(String[] walls){
+    public void setWalls(String[] walls) {
         this.walls = walls;
     }
 
-    public String[] getWalls(){
+    public String[] getWalls() {
         return walls;
+    }
+
+    public void sendMessage(String direction, String type) {
+        String dir = null;
+        switch (direction) {
+            case "l" -> dir = myP2Pcontroller.getProperties().getProperty("ml");
+            case "r" -> dir = myP2Pcontroller.getProperties().getProperty("mr");
+            case "d" -> dir = myP2Pcontroller.getProperties().getProperty("dc");
+            case "u" -> dir = myP2Pcontroller.getProperties().getProperty("uc");
+        }
+
+        String [] data = {type, String.valueOf(pelotaModel.getPositionActual().x),
+                String.valueOf(pelotaModel.getPositionActual().y),
+                String.valueOf(pelotaModel.getVelocidad().x),
+                String.valueOf(pelotaModel.getVelocidad().x)};
+
+        myP2Pcontroller.sendMessage(dir, Arrays.toString(data));
+    }
+
+    @Override
+    public void run() {
+
+        while (true) {
+            if (isPelota) {
+                try {
+                    pelotaModel.moverPelota();
+                    pelotaView.repaint();
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    // handle exception
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void addConnection(String ip) {
+
+    }
+
+    @Override
+    public void pushMessage(String ip, String message) {
+
     }
 }

@@ -9,13 +9,15 @@ import communications.connections.ConnectionController;
 
 public class MyP2P {
 	private ClientP2P client;
+
+	private Properties properties;
 	private ConnectionController connectionController;
 	
 	public MyP2P() {
-		Properties properties = new Properties();
+		this.properties = new Properties();
 		try {
 			// Afegir ip de peers a la llista
-			properties.load(new FileInputStream(new File("connections.properties")));
+			properties.load(new FileInputStream("connections.properties"));
 			int serverPort = Integer.parseInt(properties.getProperty("server_port"));
 			int timeToLive = Integer.parseInt(properties.getProperty("ttl"));
 			int timeout = Integer.parseInt(properties.getProperty("timeout"));
@@ -33,6 +35,10 @@ public class MyP2P {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+	}
+
+	public Properties getProperties(){
+		return properties;
 	}
 	
 	/**
